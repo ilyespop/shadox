@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popliko</title>
+    <style>
+        body {
+            background-color: #d3d3d3; /* خلفية رمادية */
+            color: black; /* لون النص أسود */
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin-top: 50px;
+            padding: 20px;
+            background: white;
+            display: inline-block;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        img {
+            width: 200px; /* حجم صورة الذئب */
+            border-radius: 10px;
+        }
+        input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #333;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-container" class="container">
+        <img src="wolf.jpg" alt="صورة ذئب">
+        <h2>تسجيل الدخول</h2>
+        <form id="login-form">
+            <input type="text" id="username" placeholder="اسم المستخدم" required><br>
+            <input type="password" id="password" placeholder="كلمة المرور" required><br>
+            <button type="submit">دخول</button>
+        </form>
+    </div>
+
+    <div id="welcome-container" class="container" style="display: none;">
+        <h1>مرحبًا بك في الموقع!</h1>
+    </div>
+
+    <script>
+        // التحقق إذا كان المستخدم مسجل مسبقًا
+        document.addEventListener("DOMContentLoaded", function() {
+            let savedUsername = localStorage.getItem("username");
+            let savedPassword = localStorage.getItem("password");
+
+            if (savedUsername && savedPassword) {
+                // إذا كانت البيانات محفوظة، إظهار رسالة الترحيب
+                document.getElementById("login-container").style.display = "none";
+                document.getElementById("welcome-container").style.display = "block";
+            }
+        });
+
+        // تسجيل الدخول وحفظ البيانات
+        document.getElementById("login-form").addEventListener("submit", function(event) {
+            event.preventDefault(); // منع إعادة تحميل الصفحة
+
+            let username = document.getElementById("username").value;
+            let password = document.getElementById("password").value;
+
+            // حفظ اسم المستخدم وكلمة المرور في Local Storage
+            localStorage.setItem("username", username);
+            localStorage.setItem("password", password);
+
+            // إظهار رسالة الترحيب
+            document.getElementById("login-container").style.display = "none";
+            document.getElementById("welcome-container").style.display = "block";
+        });
+    </script>
+
+</body>
+</html>

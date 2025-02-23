@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقعي</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.6.4/math.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            color: #333;
+        }
+        .container {
+            width: 350px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+        }
+        input, button {
+            width: calc(100% - 20px);
+            margin: 10px 0;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        canvas {
+            width: 100%;
+            max-width: 500px;
+            height: 300px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="login" class="container">
+        <h2>إنشاء حساب</h2>
+        <input type="text" id="username" placeholder="اسم المستخدم">
+        <input type="password" id="password" placeholder="كلمة المرور">
+        <button onclick="register()">إنشاء حساب</button>
+    </div>
+
+    <div id="home" class="container" style="display:none;">
+        <h1>أهلاً بك في الموقع</h1>
+        <button onclick="showCalculator()">آلة حاسبة</button>
+        <button onclick="showGraph()">تمثيل دوال</button>
+    </div>
+
+    <div id="graph" class="container" style="display:none;">
+        <h2>تمثيل دوال</h2>
+        <input type="text" id="functionInput" placeholder="أدخل الدالة مثلاً: x^2">
+        <button onclick="plotGraph()">رسم الدالة</button>
+        <canvas id="graphCanvas"></canvas>
+    </div>
+
+    <script>
+        function register() {
+            let user = document.getElementById("username").value;
+            let pass = document.getElementById("password").value;
+            if (pass.length < 8) {
+                alert("يجب أن تكون كلمة المرور أكثر من 8 أحرف");
+                return;
+            }
+            localStorage.setItem("user", user);
+            document.getElementById("login").style.display = "none";
+            document.getElementById("home").style.display = "block";
+        }
+
+        function showGraph() {
+            document.getElementById("home").style.display = "none";
+            document.getElementById("graph").style.display = "block";
+        }
+
+        function plotGraph() {
+            let expr = document.getElementById("functionInput").value;
+            let ctx = document.getElementById("graphCanvas").getContext("2d");
+            let xValues = Array.from({length: 41}, (_, i) => i - 20);
+            let yValues = xValues.map(x => math.evaluate(expr, {x: x}));
+            
+            new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: xValues,
+                    datasets: [{
+                        label: "الدالة",
+                        data: yValues,
+                        borderColor: "blue",
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {title: {display: true, text: "المتغير x"}},
+                        y: {title: {display: true, text: "القيمة y"}}
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

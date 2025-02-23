@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة ورسوم بيانية</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333;
+            text-align: center;
+            padding: 50px;
+            color: white;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px;
+            margin: auto;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            color: black;
+        }
+        input, button {
+            width: 90%;
+            margin: 10px;
+            padding: 15px;
+            font-size: 16px;
+        }
+        button {
+            cursor: pointer;
+        }
+        .calculator, .graphing {
+            display: none;
+        }
+        #register-link {
+            font-size: 12px;
+            cursor: pointer;
+            color: blue;
+        }
+        canvas {
+            background: white;
+        }
+        #register-container button {
+            font-size: 20px;
+            padding: 15px 25px;
+            background-color: blue;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="login-container">
+        <h2>تسجيل الدخول</h2>
+        <input type="text" id="username" placeholder="اسم المستخدم" required>
+        <input type="password" id="password" placeholder="كلمة المرور" required>
+        <button onclick="login()">تسجيل الدخول</button>
+        <p id="register-link" onclick="showRegister()">إنشاء حساب</p>
+    </div><div class="container" id="register-container" style="display: none;">
+    <h2>إنشاء حساب</h2>
+    <input type="text" id="new-username" placeholder="اسم المستخدم" required>
+    <input type="password" id="new-password" placeholder="كلمة المرور" required>
+    <button onclick="register()">إنشاء حساب</button>
+</div>
+
+<div class="container" id="choice-container" style="display: none;">
+    <h2>مرحبًا <span id="user-name"></span></h2>
+    <button onclick="showCalculator()">الآلة الحاسبة</button>
+    <button onclick="showGraphing()">إنشاء دالة</button>
+    <button onclick="logout()">تسجيل الخروج</button>
+</div>
+
+<div class="container calculator" id="calculator-container">
+    <h2>الآلة الحاسبة</h2>
+    <input type="text" id="calc-display" disabled>
+    <div>
+        <button onclick="clearDisplay()">C</button>
+        <button onclick="appendToDisplay('1')">1</button>
+        <button onclick="appendToDisplay('2')">2</button>
+        <button onclick="appendToDisplay('+')">+</button>
+    </div>
+    <div>        <button onclick="appendToDisplay('3')">3</button>
+        <button onclick="appendToDisplay('4')">4</button>
+        <button onclick="appendToDisplay('5')">5</button>
+        <button onclick="appendToDisplay('-')">-</button>
+    </div>
+    <div>
+        <button onclick="calculate()">=</button>
+    </div>
+</div>
+
+<div class="container graphing" id="graphing-container">
+    <h2>إنشاء دالة</h2>
+    <input type="text" id="function-input" placeholder="مثال: x*x" required>
+    <button onclick="plotFunction()">رسم الدالة</button>
+    <canvas id="graphCanvas" width="500" height="500"></canvas>
+</div>
+
+<script>
+    function register() {
+        let username = document.getElementById("new-username").value;
+        let password = document.getElementById("new-password").value;
+        if (username.length > 2 && password.length > 7) {
+            localStorage.setItem(username, JSON.stringify({ password: password }));
+            sessionStorage.setItem("loggedUser", username);
+            showChoice(username);
+        } else {
+            alert("يجب أن يكون الاسم وكلمة المرور أكثر من حرفين");
+        }
+    }
+
+    function login() {
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
+        let userData = JSON.parse(localStorage.getItem(username));
+        if (userData && userData.password === password) {
+            sessionStorage.setItem("loggedUser", username);
+            showChoice(username);
+        } else {
+            alert("بيانات غير صحيحة");
+        }
+    }
+
+    function showRegister() {
+        document.getElementById("login-container").style.display = "none";
+        document.getElementById("register-container").style.display = "block";
+    }
+
+    function showChoice(username) {
+        document.getElementById("login-container").style.display = "none";
+        document.getElementById("register-container").style.display = "none";
+        document.getElementById("choice-container").style.display = "block";
+        document.getElementById("user-name").innerText = username;
+    }
+
+    function logout() {
+        sessionStorage.removeItem("loggedUser");
+        location.reload();
+    }
+
+    function showCalculator() {
+        document.getElementById("calculator-container").style.display = "block";
+        document.getElementById("graphing-container").style.display = "none";
+    }
+
+    function showGraphing() {
+        document.getElementById("calculator-container").style.display = "none";
+        document.getElementById("graphing-container").style.display = "block";
+    }
+</script>
+
+</body>
+</html>
